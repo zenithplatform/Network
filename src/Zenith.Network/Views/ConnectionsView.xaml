@@ -1,0 +1,322 @@
+﻿<UserControl x:Class="Zenith.Network.ServerManager.Views.ConnectionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Zenith.Network.ServerManager.Views"
+             xmlns:ui="clr-namespace:Zenith.Network.ServerManager.UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Zenith.Client.Shared;component/Styles/DataGrid.xaml" />
+            </ResourceDictionary.MergedDictionaries>        
+
+            <ui:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
+            <ui:BooleanYesNoConverter x:Key="YesNoConverter" />
+            <ui:StatusToImageConverter x:Key="StatusImageConverter" />
+            <ui:ActivityToImageConverter x:Key="ActivityImageConverter" />
+
+        
+            <!--  EXPERIMENTAL HEADER -->
+            <!--<Style x:Key="FilterGridHeader"
+                   BasedOn="{StaticResource MetroDataGridColumnHeader}"
+                   TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="mah:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                           Margin="2"/>
+                                <TextBox BorderBrush="Black"
+                                         Margin="2"/>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>-->
+            <!-- -->
+        
+            <Style x:Key="NormalGridHeader" 
+                   BasedOn="{StaticResource MetroDataGridColumnHeader}" 
+                   TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="mah:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+            </Style>
+        
+            <Style TargetType="{x:Type TextBlock}" x:Key="EmptyMessageStyle">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RecordCount}" Value="0">
+                        <Setter Property="Foreground" Value="DarkGray" />
+                        <Setter Property="Text" Value="{Binding EmptyGridMessage}" />
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <DataTemplate x:Key="ConnectedTemplate">
+                <Rectangle Name="rect" Fill="Black" Height="12" Width="12">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Visual="{StaticResource appbar_moon_full}" Stretch="Fill" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </DataTemplate>
+
+            <DataTemplate x:Key="DisconnectedTemplate">
+                <Rectangle Name="rect" Fill="Black" Height="12" Width="12">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Visual="{StaticResource appbar_moon_new}" Stretch="Fill" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </DataTemplate>
+
+            <ui:ConnectionIndicatorTemplateSelector
+                                    x:Key="StatusSelector" 
+                                    ConnectedTemplate="{StaticResource ConnectedTemplate}"
+                                    DisconnectedTemplate="{StaticResource DisconnectedTemplate}"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border Margin="5"
+            BorderBrush="DarkGray"
+            BorderThickness="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="30" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{Binding ElementName=ConnectionsGrid, Path=ColumnHeaderHeight}" />
+                <RowDefinition Height="*" />
+                <!--<RowDefinition Height="30" />-->
+            </Grid.RowDefinitions>
+
+            <DataGrid ItemsSource="{Binding Connections}"
+                      Name="ConnectionsGrid"
+                      GridLinesVisibility="All" 
+                      CanUserAddRows="False" 
+                      CanUserDeleteRows="False" 
+                      CanUserResizeRows="False" 
+                      IsReadOnly="True" 
+                      MinHeight="200"
+                      SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                      AutoGenerateColumns="False"
+                      ColumnHeaderStyle="{StaticResource NormalGridHeader}"
+                      EnableColumnVirtualization="True"
+                      EnableRowVirtualization="True"
+                      Grid.Column="0"
+                      Grid.Row="0"
+                      Grid.RowSpan="2"
+                      BorderBrush="DarkGray"
+                      BorderThickness="0,0,1,0">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="mah:DataGridRowHelper.SelectionUnit" Value="FullRow" />
+                                    <Condition Property="IsSelected" Value="True" />
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" Value="{DynamicResource MetroDataGrid.HighlightBrush}" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="mah:DataGridRowHelper.SelectionUnit" Value="FullRow" />
+                                    <Condition Property="IsSelected" Value="True" />
+                                    <Condition Property="IsMouseOver" Value="False" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" Value="{DynamicResource MetroDataGrid.HighlightBrush}" />
+                            </MultiTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="" 
+                                            IsReadOnly="True" 
+                                            Width="25" 
+                                            CanUserResize="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Path Data="{Binding Status, Converter={StaticResource StatusImageConverter}}" 
+                                          Stretch="Uniform" 
+                                          Width="12" 
+                                          Height="12"
+                                          Fill="Black"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- With Filtering -->
+                    <!--<DataGridTextColumn Header="Connected on" Binding="{Binding Path=Time}" IsReadOnly="True" HeaderStyle="{StaticResource FilterGridHeader}"/>
+                    <DataGridTextColumn Header="Address" Binding="{Binding Path=Address}" IsReadOnly="True" HeaderStyle="{StaticResource FilterGridHeader}"/>
+                    <DataGridTextColumn Header="Identifier" Binding="{Binding Path=Identifier}" IsReadOnly="True" HeaderStyle="{StaticResource FilterGridHeader}"/>
+                    <DataGridTextColumn Header="Connected" Binding="{Binding Path=IsConnected, Converter={StaticResource YesNoConverter}}" IsReadOnly="True" HeaderStyle="{StaticResource FilterGridHeader}"/>-->
+                    <!-- -->
+                    <DataGridTextColumn Header="Connected on" Binding="{Binding Path=Time}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Address" Binding="{Binding Path=Address}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Identifier" Binding="{Binding Path=Identifier}" IsReadOnly="True" />
+                    <DataGridTextColumn Header="Connected" Binding="{Binding Path=IsConnected, Converter={StaticResource YesNoConverter}}" IsReadOnly="True" />
+                    <DataGridTemplateColumn Header="Activity" 
+                                                IsReadOnly="True" 
+                                                Width="120" 
+                                                CanUserResize="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{Binding NodeActivity, Converter={StaticResource ActivityImageConverter}}" 
+                                              Stretch="Uniform" 
+                                              Width="12" 
+                                              Height="12"
+                                              Fill="Black"
+                                              Margin="5,0,0,0"/>
+                                    <TextBlock Text="{Binding ActivityText}" Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                <DataGrid.Background>
+                    <VisualBrush Stretch="None">
+                        <VisualBrush.Visual>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource EmptyMessageStyle}" 
+                                               Margin="30" 
+                                               VerticalAlignment="Center" 
+                                               HorizontalAlignment="Center"
+                                               Visibility="{Binding IsEmpty.Value, Converter={StaticResource VisibilityConverter}}"/>
+                            </StackPanel>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </DataGrid.Background>
+            </DataGrid>
+            <Border Margin="0,0,0,0"
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    Grid.RowSpan="2"
+                    Background="Transparent"
+                    BorderBrush="DarkGray"
+                    BorderThickness="0">
+                <StackPanel Orientation="Vertical">
+                    <Button DockPanel.Dock="Top"
+                            Margin="5"
+                            Command="{Binding DisconnectCommand}"
+                            Cursor="Hand"
+                            IsEnabled="{Binding CanDisconnect, UpdateSourceTrigger=PropertyChanged}">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="OverridesDefaultStyle" Value="True" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border BorderThickness="0" 
+                                                        Name="Chrome">
+                                                <Rectangle Name="rect" Fill="Black" Height="16" Width="16">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Visual="{StaticResource connection_close}" Stretch="Fill" />
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="rect" Property="Fill" Value="{StaticResource AccentColorBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter TargetName="rect" Property="Fill" Value="DarkGray" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button DockPanel.Dock="Top"
+                                    Margin="5"
+                                    Command="{Binding CopyCommand}"
+                                    Cursor="Hand"
+                                    IsEnabled="{Binding SelectionNonEmpty, UpdateSourceTrigger=PropertyChanged}">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="OverridesDefaultStyle" Value="True" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border BorderThickness="0" 
+                                                        Name="Chrome">
+                                                <Rectangle Name="rect" Fill="Black" Height="16" Width="16">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Visual="{StaticResource connection_copy}" Stretch="Fill" />
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="rect" Property="Fill" Value="{StaticResource AccentColorBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter TargetName="rect" Property="Fill" Value="DarkGray" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <ToggleButton DockPanel.Dock="Top"
+                                  Margin="5"
+                                  Command="{Binding FilterCommand}"
+                                  Cursor="Hand"
+                                  IsEnabled="{Binding IsEmpty.Invert, UpdateSourceTrigger=PropertyChanged}"
+                                  IsChecked="{Binding Path=FilterVisible}">
+                        <ToggleButton.Style>
+                            <Style TargetType="{x:Type ToggleButton}">
+                                <Setter Property="OverridesDefaultStyle" Value="True" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                            <Border BorderThickness="0" 
+                                                        Name="Chrome">
+                                                <Rectangle Name="rect" Fill="Black" Height="16" Width="16">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Visual="{StaticResource connections_filter}" Stretch="Fill" />
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="rect" Property="Fill" Value="{StaticResource AccentColorBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter TargetName="rect" Property="Fill" Value="DarkGray" />
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter TargetName="rect" Property="OpacityMask">
+                                                        <Setter.Value>
+                                                            <VisualBrush Visual="{StaticResource connections_filter_clear}" Stretch="Fill" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ToggleButton.Style>
+                    </ToggleButton>
+                </StackPanel>
+            </Border>
+            <!--<Border Margin="0,0,0,0"
+                    Grid.Column="0"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Background="Transparent"
+                    BorderBrush="DarkGray"
+                    BorderThickness="0">
+            </Border>-->
+        </Grid>
+    </Border>
+</UserControl>

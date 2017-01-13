@@ -1,0 +1,30 @@
+﻿<Metro:MetroWindow x:Class="Zenith.Network.TestClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:Zenith.Network.TestClient"
+        mc:Ignorable="d"
+        Title="Zenith network"
+        SizeToContent="WidthAndHeight"
+        EnableDWMDropShadow="True"
+        TitleCaps="False"
+        ResizeMode="NoResize"
+        Height="Auto" Width="Auto">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Zenith.Network.TestClient;component/Resources/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Metro:TransitioningContentControl UseLayoutRounding="True"
+                                           Content="{Binding CurrentView}"
+                                           DataContext="{Binding MainViewModel}">
+        </Metro:TransitioningContentControl>
+        <!--<local:StartPage Visibility="Visible" DataContext="{Binding StartPage}"/>
+        <local:ActiveUsersControl Margin="5" Visibility="Hidden" DataContext="{Binding ActiveUsers}"/>-->
+    </Grid>
+</Metro:MetroWindow>

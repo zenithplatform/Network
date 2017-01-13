@@ -1,0 +1,11 @@
+﻿{
+  "networkConfig": {
+    "incomingConnectionsPort": 17771,
+    "autodiscoveryPort": 17772,
+    "nodeFingerprint": [ 1, 2, 3, 4, 5 ],
+    "acknowledgeBrodcast": true,
+    "announceInterval": 2000,
+    "centralServerAddress": "http://192.168.0.101:8080",
+    "hubName": "CentralHub"
+  }
+}

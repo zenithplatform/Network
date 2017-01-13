@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5A04539E-9750-4D33-BEDB-5AE3D698B80E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Zenith.Network.Api</RootNamespace>
+    <AssemblyName>Zenith.Network.Api</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Griffin.Core, Version=1.0.39.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Griffin.Framework.1.0.39\lib\net45\Griffin.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Griffin.Core.Json, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Griffin.Framework.Json.1.0.2\lib\net45\Griffin.Core.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.2.1\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UdtProtocol, Version=0.9.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\UDT.Net.x64.0.9.0\lib\net40\UdtProtocol.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\NetworkConnectionBase.cs" />
+    <Compile Include="EventArgs.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Infrastructure\GlobalNetworkCoordinator.cs" />
+    <Compile Include="Infrastructure\HubClient.cs" />
+    <Compile Include="Infrastructure\INetworkCoordinator.cs" />
+    <Compile Include="Infrastructure\INetworkStack.cs" />
+    <Compile Include="Infrastructure\IComponentContainer.cs" />
+    <Compile Include="Infrastructure\INetworkStartup.cs" />
+    <Compile Include="Infrastructure\LocalNetworkCoordinator.cs" />
+    <Compile Include="Infrastructure\NetworkConfig.cs" />
+    <Compile Include="Infrastructure\NetworkNode.cs" />
+    <Compile Include="Infrastructure\NetworkStack.cs" />
+    <Compile Include="Infrastructure\ComponentContainer.cs" />
+    <Compile Include="Infrastructure\NetworkStartup.cs" />
+    <Compile Include="Interfaces\INetworkConnector.cs" />
+    <Compile Include="Interfaces\INetworkDiscovery.cs" />
+    <Compile Include="Interfaces\INetworkProvider.cs" />
+    <Compile Include="Interfaces\INetworkRegistration.cs" />
+    <Compile Include="Interfaces\INetworkTransmission.cs" />
+    <Compile Include="Interfaces\INodeMetadata.cs" />
+    <Compile Include="Interfaces\INodeStorage.cs" />
+    <Compile Include="Interfaces\INetworkReceiveStrategy.cs" />
+    <Compile Include="Interfaces\IRequestHandler.cs" />
+    <Compile Include="Interfaces\INetworkSendStrategy.cs" />
+    <Compile Include="Messages\Base.cs" />
+    <Compile Include="Messages\Communication.cs" />
+    <Compile Include="Messages\HandlerResult.cs" />
+    <Compile Include="Messages\Notification.cs" />
+    <Compile Include="Messages\Query.cs" />
+    <Compile Include="Messages\Registration.cs" />
+    <Compile Include="Protocol\MessageDecoder.cs" />
+    <Compile Include="Protocol\MessageEncoder.cs" />
+    <Compile Include="Protocol\Tcp\NodeTcpClient.cs" />
+    <Compile Include="Protocol\Tcp\NodeTcpListener.cs" />
+    <Compile Include="Protocol\Udp\BroadcastConfig.cs" />
+    <Compile Include="Protocol\Udp\LocalNetworkHelper.cs" />
+    <Compile Include="Protocol\Udt\FileTransfer\NetworkFileReceiver.cs" />
+    <Compile Include="Protocol\Udt\FileTransfer\NetworkFileSender.cs" />
+    <Compile Include="Protocol\Udt\TextMessage\NetworkTextMessageReceiver.cs" />
+    <Compile Include="Protocol\Udt\TextMessage\NetworkTextMessageSender.cs" />
+    <Compile Include="Protocol\Udt\UdtConnector.cs" />
+    <Compile Include="RequestResponse\NetworkNodeQuery.cs" />
+    <Compile Include="RequestResponse\NetworkNodeRegistration.cs" />
+    <Compile Include="RequestResponse\NetworkNodeRequestBase.cs" />
+    <Compile Include="RequestResponse\NetworkNodeResponseBase.cs" />
+    <Compile Include="Messages\NodeMetadata.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\IPAddressConverter.cs" />
+    <Compile Include="Serialization\IPEndPointConverter.cs" />
+    <Compile Include="Serialization\MessageSerializer.cs" />
+    <Compile Include="Statistics\FileTransferProgress.cs" />
+    <Compile Include="Statistics\NetworkStatistics.cs" />
+    <Compile Include="Statistics\Progress.cs" />
+    <Compile Include="Statistics\ProgressArgs.cs" />
+    <Compile Include="Storage\NodeStorage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Zenith.Global\Zenith.Core.DataProviders\Zenith.Core.DataProviders.csproj">
+      <Project>{37e0ff36-b1b9-4413-9adc-01396a607b27}</Project>
+      <Name>Zenith.Core.DataProviders</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\Zenith.Global\Zenith.Core.Shared\Zenith.Core.Shared.csproj">
+      <Project>{dd0afd26-0f92-4d5b-a184-d301b1d11a3f}</Project>
+      <Name>Zenith.Core.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Zenith.Network.Core\Zenith.Network.Core.csproj">
+      <Project>{fc13af32-4e1a-47c3-b27f-2f3bcfad75fc}</Project>
+      <Name>Zenith.Network.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
